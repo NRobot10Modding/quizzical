@@ -42,7 +42,7 @@ if action == 'load':
         quizName = input('Enter file name: ')
 
     try:
-        with open(f"{quizName}", "r") as f:
+        with open(quizName, "r") as f:
             print(f'Accessing {quizName}')
             quiz = json.load(f)
             qCount = int(countQuestions(quiz)/2-1)
