@@ -16,7 +16,7 @@ while quizFile == '':
     quizFile = input('Enter the name of your quiz library JSON file: ')
 
 try:
-    with open(f"{quizFile}", "r") as f:
+    with open(quizFile, "r") as f:
         print(f'accessing {quizFile}')
         quiz = json.load(f)
 except FileNotFoundError:
