@@ -15,11 +15,13 @@ def addQuestion():
     quiz["answers"][qCount+1] = input('Enter the answer for your new question: ').lower()
     
 def editQuestion():
-    question = input('Enter the question you want to change: ')
+    question = int(input('Enter the question you want to change: '))
     qInput = input('Enter your new replacement question: ')
+    del quiz["questions"][question]
     quiz["questions"][question] = qInput
     
     answer = input('Enter the answer to your new question: ').lower()
+    del quiz["answers"][question]
     quiz["answers"][question] = answer
     
 def deleteQuestion():
