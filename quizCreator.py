@@ -10,21 +10,23 @@ def countQuestions(d):
     return count
 
 def addQuestion():
+    qCount = int(countQuestions(quiz)/2-1)
     quiz["questions"][qCount+1] = input('Enter your new question: ')
-    quiz["answers"][qCount+1] = input('Enter the answer for your new question')
+    quiz["answers"][qCount+1] = input('Enter the answer for your new question: ').lower()
     
 def editQuestion():
     question = input('Enter the question you want to change: ')
     qInput = input('Enter your new replacement question: ')
-    quiz.update({"questions": {question: qInput}})
+    quiz["questions"][question] = qInput
     
-    answer = input('Enter the answer to your new question: ')
-    quiz.update({"answers": {question: answer}})
+    answer = input('Enter the answer to your new question: ').lower()
+    quiz["answers"][question] = answer
     
 def deleteQuestion():
     question = input('Enter the question you wish to delete: ')
     
-    del quiz[question]
+    del quiz["questions"][question]
+    del quiz["answers"][question]
 
 quizName = ''
 action = ''
@@ -55,17 +57,17 @@ if action == 'load':
     print(quiz)
 
     while action == '':
-        action = input('Would you like to add a new question, edit an existing question, or remove a question? [Add/Edit/Delete]:').lower()
+        action = input('Would you like to add a new question, edit an existing question, or remove a question? [Add/Edit/Delete]: ').lower()
     if action == 'add':
         action = ''
 
         addQuestion()
 
-        action = input('Add another question? [y/N]:').lower()
+        action = input('Add another question? [y/N]: ').lower()
 
         while action == 'y':
             addQuestion()
-            action = action = input('Add another question? [y/N]:').lower()
+            action = action = input('Add another question? [y/N]: ').lower()
         else:
             jsonContent = json.dumps(quiz, indent=4)
             with open(quizName, "w") as f:
@@ -76,11 +78,11 @@ if action == 'load':
         
         editQuestion()
         
-        action = input('Edit another question? [y/N]:').lower()
+        action = input('Edit another question? [y/N]: ').lower()
         
         while action == 'y':
             addQuestion()
-            action = input('Edit another question? [y/N]:').lower()
+            action = input('Edit another question? [y/N]: ').lower()
         else:
             jsonContent = json.dumps(quiz, indent=4)
             with open(quizName, "w") as f:
@@ -99,4 +101,72 @@ if action == 'load':
         else:
             jsonContent = json.dumps(quiz, indent=4)
             with open(quizName, "w") as f:
+                f.write(jsonContent)
+
+elif action == 'create':
+    action = 'yes'
+
+    quiz = {'questions': {}, 'answers': {}}
+
+    while quizName == '':
+        quizName = input('Enter the name of your new quiz: ')
+    
+    while action != 'n':
+         addQuestion()
+         action = input('Add another question? [Y/n]: ')
+
+    else:
+        action = ''
+
+        while action == '':
+            action = input('Would you like to add a new question, edit an existing question, remove a question, or none of the above? [Add/Edit/Delete/Quit]: ').lower()
+
+        if action == 'add':
+            action = ''
+
+            addQuestion()
+
+            action = input('Add another question? [y/N]: ').lower()
+
+            while action == 'y':
+                addQuestion()
+                action = action = input('Add another question? [y/N]: ').lower()
+            else:
+                jsonContent = json.dumps(quiz, indent=4)
+                with open(f"{quizName}.json", "w") as f:
+                    f.write(jsonContent)
+
+        elif action == 'edit':
+            action = ''
+            
+            editQuestion()
+            
+            action = input('Edit another question? [y/N]: ').lower()
+            
+            while action == 'y':
+                addQuestion()
+                action = input('Edit another question? [y/N]: ').lower()
+            else:
+                jsonContent = json.dumps(quiz, indent=4)
+                with open(f"{quizName}.json", "w") as f:
+                    f.write(jsonContent)
+
+        elif action == 'delete':
+            action = ''
+            
+            deleteQuestion()
+            
+            action = input('Delete another question? [y/N]: ')
+            
+            while action == 'y':
+                deleteQuestion()
+                action = input('Delete another question? [y/N]: ')
+            else:
+                jsonContent = json.dumps(quiz, indent=4)
+                with open(f"{quizName}.json", "w") as f:
+                    f.write(jsonContent)
+
+        else:
+            jsonContent = json.dumps(quiz, indent=4)
+            with open(f"{quizName}.json", "w") as f:
                 f.write(jsonContent)
